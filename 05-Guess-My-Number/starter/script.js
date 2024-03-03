@@ -3,45 +3,40 @@
 let randomNumber = Math.floor(Math.random() * 20) + 1;
 let score = 20;
 
+const displayMessage = (selector, message) => {
+  document.querySelector(selector).textContent = message;
+};
+
+const changeBackgroundColor = (selector, color) => {
+  document.querySelector(selector).style.backgroundColor = color;
+};
+
 document.querySelector('.check').addEventListener('click', function () {
   let guess = parseInt(document.querySelector('.guess').value);
   let highscoreElement = document.querySelector('.highscore');
 
-  document.querySelector('.number').textContent = guess;
+  displayMessage('.number', guess);
 
   if (!guess) {
-    document.querySelector('.message').textContent = '⛔ Input is not given...';
-  } else if (guess > randomNumber) {
+    displayMessage('.message', '⛔ Input is not given...');
+  } else if (guess != randomNumber) {
     score = score - 1;
+    displayMessage('.score', score);
     if (score > 0) {
-      document.querySelector('.message').textContent =
-        '📈 Higher number is chosen';
-      document.querySelector('.score').textContent = score;
+      displayMessage(
+        '.message',
+        guess < randomNumber
+          ? '📉 Lower number is chosen'
+          : '📈 Higher number is chosen'
+      );
     } else {
-      document.querySelector('.message').textContent = '😭 You lost the game.';
-      randomNumber = Math.floor(Math.random() * 20) + 1;
-      score = 20;
-      document.querySelector('.score').textContent = 20;
-      document.querySelector('.number').textContent = '?';
-    }
-  } else if (guess < randomNumber) {
-    score = score - 1;
-    if (score > 0) {
-      document.querySelector('.message').textContent =
-        '📉 Lower number is chosen';
-      document.querySelector('.score').textContent = score;
-    } else {
-      document.querySelector('.message').textContent = '😭 You lost the game.';
-      randomNumber = Math.floor(Math.random() * 20) + 1;
-      score = 20;
-      document.querySelector('.score').textContent = 20;
-      document.querySelector('.number').textContent = '?';
+      changeBackgroundColor('body', 'red');
+      displayMessage('.message', '😭 You lost the game. Click Again');
     }
   } else {
-    document.querySelector('.message').textContent =
-      '🎉 You guessed it right!!!';
+    displayMessage('.message', '🎉 You guessed it right!!!');
 
-    document.querySelector('body').style.backgroundColor = 'green';
+    changeBackgroundColor('body', 'green');
 
     // Check if current guess is greater than the current highscore
     if (parseInt(highscoreElement.textContent) < randomNumber) {
@@ -53,8 +48,8 @@ document.querySelector('.check').addEventListener('click', function () {
 document.querySelector('.again').addEventListener('click', function () {
   randomNumber = Math.floor(Math.random() * 20) + 1;
   score = 20;
-  document.querySelector('.score').textContent = 20;
-  document.querySelector('.number').textContent = '?';
-  document.querySelector('.message').textContent = 'Start gussing...';
-  document.querySelector('body').style.backgroundColor = '#222';
+  displayMessage('.score', 20);
+  displayMessage('.number', '?');
+  displayMessage('.message', 'Start gussing...');
+  changeBackgroundColor('body', '#222');
 });
